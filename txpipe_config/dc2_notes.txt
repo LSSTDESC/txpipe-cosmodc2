@@ -1,0 +1,39 @@
+Reproducing Plots
+
+
+1) Install on NERSC:
+
+git clone -b dc2 git://github.com/LSSTDESC/TXPipe
+source examples/nersc/setup
+python -m venv env
+source env/bin/activate
+pip install -e git://github.com/LSSTDESC/ceci@minirunner#egg=ceci
+
+
+2) Get an interactive job with this:
+
+salloc -N 2  -q interactive -C haswell -t 1:30:00 -A m1727
+
+# if in a new terminal:
+source env/bin/activate
+
+
+3) Run ceci
+
+# might not be needed, can't recall:
+mkdir -p data/cosmodc2/outputs
+ceci examples/cosmodc2.yml
+
+4) Make plots
+When that's complete, download these output files from NERSC
+to the same location on your laptop
+
+data/cosmodc2/outputs/photoz_stack.hdf5
+data/cosmodc2/outputs/tracer_metadata.hdf5
+data/cosmodc2/outputs/twopoint_data.sacc
+data/cosmodc2/outputs/twopoint_data_fourier.sacc
+
+cd examples/notebooks
+then run an ipython notebook and open and run plot_3x2pt_results.ipynb
+
+
