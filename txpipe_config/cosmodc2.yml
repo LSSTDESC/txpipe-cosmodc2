@@ -9,7 +9,7 @@ modules: txpipe
 
 stages:
     - name: TXSelector
-      nprocess: 32
+      #nprocess: 32
 
       #- name: TXTrueNumberDensity
       #- name: TXPhotozPlots
@@ -32,8 +32,8 @@ stages:
       
       #nodes: 1
 
-
-output_dir: data/cosmodc2/outputs
+output_dir: /global/projecta/projectdirs/lsst/groups/WL/users/chihway
+#output_dir: data/cosmodc2/outputs
 config: txpipe_config/config.yml
 
 # On NERSC, set this before running:
