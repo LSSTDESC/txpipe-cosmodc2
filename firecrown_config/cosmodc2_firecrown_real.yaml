@@ -171,7 +171,7 @@ two_point:
     {% endfor %}
 
   statistics:
-    {% for stat, sacc_stat in [('xip', 'galaxy_shear_xi_plus'), ('xim', 'galaxy_shear_xi_minus')] %}
+    {% for stat, sacc_stat in [('xip', 'galaxy_shear_xi_plus')] %} #, ('xim', 'galaxy_shear_xi_minus')] %}
     {% for i in range(4) %}
     {% for j in range(i, 4) %}
     {{ stat }}_src{{ i }}_src{{ j }}:
@@ -201,7 +201,7 @@ two_point:
   likelihood:
     kind: ConstGaussianLogLike
     data_vector:
-    {% for stat in ['xip', 'xim'] %}
+    {% for stat in ['xip'] %}  #'xim'
     {% for i in range(4) %}
     {% for j in range(i, 4) %}
       - {{ stat }}_src{{ i }}_src{{ j }}
