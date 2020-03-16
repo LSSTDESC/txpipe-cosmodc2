@@ -1,16 +1,16 @@
 parameters:
   Omega_k: 0.0
-  Omega_b: 0.0485
-  Omega_c: 0.2545
+  Omega_b: 0.04479
+  Omega_c: 0.22
   w0: -1.0
   wa: 0.0
-  h: 0.682
-  sigma8: 0.801
-  n_s: 0.971
+  h: 0.71
+  sigma8: 0.8
+  n_s: 0.963
   transfer_function: eisenstein_hu
 
   # IA model
-  A0: 0.5
+  A0: 0.0
   eta_ia: 0.0
 
   # these parameters are fixed
@@ -28,12 +28,12 @@ parameters:
   {% endfor %}
 
   # photoz shifts for the lensing sources
-  {% for i, loc in [(0, -0.001), (1, -0.019), (2, 0.009), (3, -0.018)] %}
+  {% for i, loc in [(0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0)] %}
   src{{ i }}_delta_z: {{ loc }}
   {% endfor %}
 
   # photoz shifts for the lenses
-  {% for i, loc in [(0, 0.001)] %}
+  {% for i, loc in [(0, 0.0)] %}
   lens{{ i }}_delta_z: {{ loc }}
   {% endfor %}
 
@@ -41,97 +41,104 @@ emcee:
   parameters:
     - sigma8
     - Omega_c
-    - A0
-    - eta_ia
-  {% for i in range(4) %}
-    - src{{ i }}_mult_bias
-  {% endfor %}
-  {% for i in range(1) %}
-    - bias_lens{{ i }}
-  {% endfor %}
-  {% for i in range(4) %}
-    - src{{ i }}_delta_z
-  {% endfor %}
-  {% for i in range(1) %}
-    - lens{{ i }}_delta_z
-  {% endfor %}
-  n_steps: 1000
-  backend: multiprocessing
+      #- A0
+      #- eta_ia
+      #  {% for i in range(4) %}
+      #- src{{ i }}_mult_bias
+      #{% endfor %}
+      #{% for i in range(1) %}
+      #- bias_lens{{ i }}
+      #{% endfor %}
+  #{% for i in range(4) %}
+  #  - src{{ i }}_delta_z
+  #{% endfor %}
+  #{% for i in range(1) %}
+  #  - lens{{ i }}_delta_z
+  #{% endfor %}
+  n_steps: 500
+  backend: mpi
 
 priors:
   module: firecrown.priors
 
-  Omega_b:
-    kind: uniform
-    loc: 0.03
-    scale: 0.04  # 0.07 - 0.03
+  #Omega_b:
+  #  kind: uniform
+  #  loc: 0.03
+  #  scale: 0.04  # 0.07 - 0.03
   Omega_c:
     kind: uniform
     loc: 0.03
     scale: 0.84  # 0.87 - 0.03
-  w0:
-    kind: uniform
-    loc: -2.0
-    scale: 1.67  # -0.33 - -2
-  h:
-    kind: uniform
-    loc: 0.55
-    scale: 0.36  # 0.91 - 0.55
-  n_s:
-    kind: uniform
-    loc: 0.87
-    scale: 0.2  # 1.07 - 0.87
+  sigma8: 
+    kind: uniform 
+    loc: 0.5
+    scale: 0.6
 
-  A0:
-    kind: uniform
-    loc: -5.0
-    scale: 10  # 5.0 -- 5
-  eta_ia:
-    kind: uniform
-    loc: -5.0
-    scale: 10  # 5.0 -- 5
+    #  w0:
+    #kind: uniform
+    #loc: -2.0
+    #scale: 1.67  # -0.33 - -2
+    #h:
+    #kind: uniform
+    #loc: 0.55
+    #scale: 0.36  # 0.91 - 0.55
+    #n_s:
+    #kind: uniform
+    #loc: 0.87
+    #scale: 0.2  # 1.07 - 0.87
 
-  {% for i in range(1) %}
-  bias_lens{{ i }}:
-    kind: uniform
-    loc: 0.8
-    scale: 2.2  # 3.0 - 0.8
-  {% endfor %}
+    #A0:
+    #kind: uniform
+    #loc: -5.0
+    #scale: 10  # 5.0 -- 5
+    #eta_ia:
+    #kind: uniform
+    #loc: -5.0
+    #scale: 10  # 5.0 -- 5
 
-  {% for i, loc, scale in [(0, 0.001, 0.008)] %}
-  lens{{ i }}_delta_z:
-    kind: norm
-    loc: {{ loc }}
-    scale: {{ scale }}
-  {% endfor %}
+    #{% for i in range(1) %}
+    #bias_lens{{ i }}:
+    #kind: uniform
+    #loc: 0.8
+    #scale: 2.2  # 3.0 - 0.8
+    #{% endfor %}
 
-  {% for i, loc, scale in [(0, -0.001, 0.016), (1, -0.019, 0.013), (2, 0.009, 0.011), (3, -0.018, 0.022)] %}
-  src{{ i }}_delta_z:
-    kind: norm
-    loc: {{ loc }}
-    scale: {{ scale }}
-  {% endfor %}
+  #{% for i, loc, scale in [(0, 0.001, 0.008)] %}
+  #lens{{ i }}_delta_z:
+  #  kind: norm
+  #  loc: {{ loc }}
+  #  scale: {{ scale }}
+  #{% endfor %}
 
-  {% for i in range(4) %}
-  src{{ i }}_mult_bias:
-    kind: norm
-    loc: 0.012
-    scale: 0.023
-  {% endfor %}
+  #{% for i, loc, scale in [(0, -0.001, 0.016), (1, -0.019, 0.013), (2, 0.009, 0.011), (3, -0.018, 0.022)] %}
+  #src{{ i }}_delta_z:
+  #  kind: norm
+  #  loc: {{ loc }}
+  #  scale: {{ scale }}
+  #{% endfor %}
+
+    #{% for i in range(4) %}
+    #src{{ i }}_mult_bias:
+    #kind: norm
+    #loc: 0.012
+    #scale: 0.023
+    #{% endfor %}
 
 two_point:
   module: firecrown.ccl.two_point
-  sacc_file:  summary_statistics_real.sacc
+  sacc_file:  /global/homes/c/chihway/txpipe-cosmodc2/firecrown_config/summary_statistics_real.sacc
+  #/global/homes/c/chihway/txpipe-cosmodc2/firecrown_config/output_3bc0dcebc4344a0eb9ac042fdf4dad8c/statistics/two_point/sacc_predicted.fits
+  #summary_statistics_real.sacc
   sources:
     {% for i in range(4) %}
     src{{ i }}:
       kind: WLSource
       #sacc_tracer: src{{ i }}
       sacc_tracer: source_{{ i }}
-      ia_bias: A0
+      #ia_bias: A0
       systematics:
         - delta_z_src{{ i }}
-        - des_ia
+          #- des_ia
         - shear_bias_src{{ i }}
     {% endfor %}
 
@@ -158,11 +165,11 @@ two_point:
       delta_z: src{{ i }}_delta_z
     {% endfor %}
 
-    des_ia:
-      kind: LinearAlignmentSystematic
-      alphaz: eta_ia
-      alphag: alphag_ia
-      z_piv: z_piv_ia
+    #des_ia:
+    #  kind: LinearAlignmentSystematic
+    #  alphaz: eta_ia
+    #  alphag: alphag_ia
+    #  z_piv: z_piv_ia
 
     {% for i in range(4) %}
     shear_bias_src{{ i }}:
@@ -174,29 +181,29 @@ two_point:
     {% for stat, sacc_stat in [('xip', 'galaxy_shear_xi_plus')] %} #, ('xim', 'galaxy_shear_xi_minus')] %}
     {% for i in range(4) %}
     {% for j in range(i, 4) %}
-    {{ stat }}_src{{ i }}_src{{ j }}:
-      sources: ['src{{ i }}', 'src{{ j }}']
+    {{ stat }}_src{{ j }}_src{{ i }}:
+      sources: ['src{{ j }}', 'src{{ i }}']
       #sources: ['source_{{ i }}', 'source_{{ j }}']
       sacc_data_type: '{{ sacc_stat }}'
     {% endfor %}
     {% endfor %}
     {% endfor %}
 
-    {% for j in range(1) %}
-    {% for i in range(4) %}
-    gammat_lens{{ j }}_src{{ i }}:
-            #sources: ['lens_{{ j }}', 'source_{{ i }}']
-      sources: ['lens{{ j }}', 'src{{ i }}']
-      sacc_data_type: 'galaxy_shearDensity_xi_t'
-    {% endfor %}
-    {% endfor %}
+    #{% for j in range(1) %}
+    #{% for i in range(4) %}
+    #gammat_lens{{ j }}_src{{ i }}:
+    #  sources: ['lens_{{ j }}', 'source_{{ i }}']
+      #  sources: ['src{{ i }}', 'lens{{ j }}']
+      #  sacc_data_type: 'galaxy_shearDensity_xi_t'
+      #{% endfor %}
+      #{% endfor %}
 
-    {% for i in range(1) %}
-    wtheta_lens{{ i }}_lens{{ i }}:
-      sources: ['lens{{ i }}', 'lens{{ i }}']
+    #{% for i in range(1) %}
+    #wtheta_lens{{ i }}_lens{{ i }}:
+    #  sources: ['lens{{ i }}', 'lens{{ i }}']
             #sources: ['lens_{{ i }}', 'lens_{{ i }}']
-      sacc_data_type: 'galaxy_density_xi'
-    {% endfor %}
+            #  sacc_data_type: 'galaxy_density_xi'
+            #{% endfor %}
 
   likelihood:
     kind: ConstGaussianLogLike
@@ -204,18 +211,18 @@ two_point:
     {% for stat in ['xip'] %}  #'xim'
     {% for i in range(4) %}
     {% for j in range(i, 4) %}
-      - {{ stat }}_src{{ i }}_src{{ j }}
+      - {{ stat }}_src{{ j }}_src{{ i }}
     {% endfor %}
     {% endfor %}
     {% endfor %}
 
-    {% for j in range(1) %}
-    {% for i in range(4) %}
-      - gammat_lens{{ j }}_src{{ i }}
-    {% endfor %}
-    {% endfor %}
+    #{% for j in range(1) %}
+    #{% for i in range(4) %}
+    #  - gammat_lens{{ j }}_src{{ i }}
+    #{% endfor %}
+    #{% endfor %}
 
-    {% for i in range(1) %}
-      - wtheta_lens{{ i }}_lens{{ i }}
-    {% endfor %}
+    #{% for i in range(1) %}
+    #  - wtheta_lens{{ i }}_lens{{ i }}
+    #{% endfor %}
 
