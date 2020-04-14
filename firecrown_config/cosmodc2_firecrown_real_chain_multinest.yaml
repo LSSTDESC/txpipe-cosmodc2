@@ -8,13 +8,6 @@ parameters:
   sigma8: 0.8
   n_s: 0.963
 
-emcee:
-  parameters:
-    - sigma8
-    - Omega_c
-  n_steps: 1000
-  backend: mpi
-
 # Defines options when running one of the samplers
 # through cosmosis
 cosmosis:
@@ -41,34 +34,23 @@ cosmosis:
     tolerance: 0.1
     constant_efficiency: F
 
-  #[multinest]
-  #max_iterations=50000
-  #;max_iterations=2
-  #multinest_outfile_root=5x2_realspace
-  #resume=T
-  #This is the standard run
-  #live_points=500
-  #efficiency=0.3
-  #tolerance=0.1
-  #constant_efficiency=F
-
   # which parameters to vary in the chains
   parameters:
     Omega_c: [0.1, 0.22, 0.9]
     sigma8: [0.4, 0.8, 1.2]
 
-priors:
-  module: firecrown.priors
+    #priors:
+    #module: firecrown.priors
   
-  Omega_c:
-    kind: uniform
-    loc: 0.1
-    scale: 0.8  
+    #Omega_c:
+    #kind: uniform
+    #loc: 0.1
+    #scale: 0.8  
 
-  sigma8:
-    kind: uniform
-    loc: 0.4
-    scale: 0.8  
+    #sigma8:
+    #kind: uniform
+    #loc: 0.4
+    #scale: 0.8  
 
 
 two_point:

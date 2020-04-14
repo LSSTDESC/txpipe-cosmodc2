@@ -8,13 +8,6 @@ parameters:
   sigma8: 0.8
   n_s: 0.963
 
-emcee:
-  parameters:
-    - sigma8
-    - Omega_c
-  n_steps: 500
-  backend: mpi
-
 # Defines options when running one of the samplers
 # through cosmosis
 cosmosis:
