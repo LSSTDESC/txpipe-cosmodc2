@@ -1,3 +1,9 @@
+# This is a simple example that runs a Fisher forecast for a 2-parameter case.
+# The data vector used here is measurements from CosmoDC2, only using xip for 
+# now and all the scales. No systematics are included. 
+#
+# To run, do `firecrown run-cosmosis cosmodc2_firecrown_real_fisher.yaml`
+
 parameters:
   Omega_k: 0.0
   Omega_b: 0.04479
@@ -8,17 +14,14 @@ parameters:
   sigma8: 0.8
   n_s: 0.963
 
-  # linear bias for lenses
-  bias_lens0: 1.4
-
-# Defines options when running one of the samplers
-# through cosmosis
+# Defines options when running one of the samplers through cosmosis
 cosmosis:
-  sampler: fisher
-  output: fisher_3x2.txt
+  sampler: fisher  # choose from fisher, test, emcee, multinest and others
+  output: fisher.txt # the output fisher matrix file
   debug: True
   quiet: False
   mpi: False
+
   # parameters for individual samplers:
   test:
     fatal_errors: True
@@ -29,11 +32,12 @@ cosmosis:
     nsample_dimension: 5
   fisher:
     step_size: 0.02
-  # which parameters to vary in the chains
+  
+  # which parameters to vary in the chains 
+  # (this will be combined with the prior section below)
   parameters:
     Omega_c: [0.1, 0.22, 0.9]
     sigma8: [0.4, 0.8, 1.2]
-    bias_lens0: [1, 1.4, 2.0]
 
 priors:
   module: firecrown.priors
@@ -51,7 +55,6 @@ priors:
 two_point:
   module: firecrown.ccl.two_point
   sacc_data: summary_statistics_real.sacc
-  # this was changed 
   sources:
     {% for i in range(4) %}
     src{{ i }}:
@@ -59,121 +62,99 @@ two_point:
       sacc_tracer: source_{{ i }}
     {% endfor %}
 
-    lens0:
-      kind: NumberCountsSource
-      sacc_tracer: lens_0
-      bias: bias_lens0
-
   statistics:
-          #{% for stat, sacc_stat in [('xip', 'galaxy_shear_xi_plus')] %} 
-          #{% for i in range(4) %}
-          #{% for j in range(i, 4) %}
-          #{{ stat }}_src{{ j }}_src{{ i }}:
-          #sources: ['src{{ j }}', 'src{{ i }}']
-          #sacc_data_type: '{{ sacc_stat }}'
-          #{% endfor %}
-          #{% endfor %}
-          #{% endfor %}
-
+    #{% for stat, sacc_stat in [('xip', 'galaxy_shear_xi_plus')] %} 
+    #{% for i in range(4) %}
+    #{% for j in range(i, 4) %}
+    #{{ stat }}_src{{ j }}_src{{ i }}:
+    #  sources: ['src{{ j }}', 'src{{ i }}']
+    #  sacc_data_type: '{{ sacc_stat }}'
+    #{% endfor %}
+    #{% endfor %}
+    #{% endfor %}
     xip_src0_src0:
       sources: ['src0', 'src0']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 7.195005
+      ell_or_theta_min: 20.0
       ell_or_theta_max: 250.0
 
     xip_src1_src0:
       sources: ['src1', 'src0']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 7.195005
+      ell_or_theta_min: 20.0
       ell_or_theta_max: 250.0
 
     xip_src2_src0:
       sources: ['src2', 'src0']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 5.715196
+      ell_or_theta_min: 15.0
       ell_or_theta_max: 250.0
 
     xip_src3_src0:
       sources: ['src3', 'src0']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 5.715196
+      ell_or_theta_min: 15.0
       ell_or_theta_max: 250.0
 
     #
     xip_src1_src1:
       sources: ['src1', 'src1']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 4.539741
+      ell_or_theta_min: 10.0
       ell_or_theta_max: 250.0
 
     xip_src2_src1:
       sources: ['src2', 'src1']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 4.539741
+      ell_or_theta_min: 10.0
       ell_or_theta_max: 250.0
    
     xip_src3_src1:
       sources: ['src3', 'src1']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 4.539741
+      ell_or_theta_min: 10.0
       ell_or_theta_max: 250.0
 
 #
     xip_src2_src2:
       sources: ['src2', 'src2']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 3.606045
+      ell_or_theta_min: 7.5
       ell_or_theta_max: 250.0
      
     xip_src3_src2:
       sources: ['src3', 'src2']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 3.606045
+      ell_or_theta_min: 7.5
       ell_or_theta_max: 250.0
 
 #
     xip_src3_src3:
       sources: ['src3', 'src3']
       sacc_data_type: 'galaxy_shear_xi_plus'
-      ell_or_theta_min: 3.606045
+      ell_or_theta_min: 7.5
       ell_or_theta_max: 250.0
 
+      #angle_range_xip_1_1 = 7.195005 250.0
+      #angle_range_xip_1_2 = 7.195005 250.0
+      #angle_range_xip_1_3 = 5.715196 250.0
+      #angle_range_xip_1_4 = 5.715196 250.0
 
-      #    {% for i in range(4) %}
-      #    gammat_lens0_src{{ i }}:
-      #      sources: ['src{{ i }}', 'lens0']
-      #      sacc_data_type: 'galaxy_shearDensity_xi_t'
-      #    {% endfor %}
+      #angle_range_xip_2_1 = 7.195005 250.0
+      #angle_range_xip_2_2 = 4.539741 250.0
+      #angle_range_xip_2_3 = 4.539741 250.0
+      #angle_range_xip_2_4 = 4.539741 250.0
 
-    gammat_lens0_src0:
-      sources: ['src0', 'lens0']
-      sacc_data_type: 'galaxy_shearDensity_xi_t'
-      ell_or_theta_min: 64.0
-      ell_or_theta_max: 250.0
+      #angle_range_xip_3_1 = 5.715196 250.0
+      #angle_range_xip_3_2 = 4.539741 250.0
+      #angle_range_xip_3_3 = 3.606045 250.0
+      #angle_range_xip_3_4 = 3.606045 250.0
 
-    gammat_lens0_src1:
-      sources: ['src1', 'lens0']
-      sacc_data_type: 'galaxy_shearDensity_xi_t'
-      ell_or_theta_min: 64.0
-      ell_or_theta_max: 250.0
+      #angle_range_xip_4_1 = 5.715196 250.0
+      #angle_range_xip_4_2 = 4.539741 250.0
+      #angle_range_xip_4_3 = 3.606045 250.0
+      #angle_range_xip_4_4 = 3.606045 250.0
 
-    gammat_lens0_src2:
-      sources: ['src2', 'lens0']
-      sacc_data_type: 'galaxy_shearDensity_xi_t'
-      ell_or_theta_min: 64.0
-      ell_or_theta_max: 250.0
-
-    gammat_lens0_src3:
-      sources: ['src3', 'lens0']
-      sacc_data_type: 'galaxy_shearDensity_xi_t'
-      ell_or_theta_min: 64.0
-      ell_or_theta_max: 250.0
-
-    wtheta_lens0_lens0:
-      sources: ['lens0', 'lens0']
-      sacc_data_type: 'galaxy_density_xi'
-      ell_or_theta_min: 43.0
-      ell_or_theta_max: 250.0
 
   likelihood:
     kind: ConstGaussianLogLike
@@ -186,9 +167,5 @@ two_point:
     {% endfor %}
     {% endfor %}
 
-    {% for i in range(4) %}
-      - gammat_lens0_src{{ i }}
-    {% endfor %}
 
-      - wtheta_lens0_lens0
 
