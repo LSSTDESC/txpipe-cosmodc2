@@ -63,7 +63,7 @@ cosmosis:
 
 two_point:
   module: firecrown.ccl.two_point
-  sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/better_binning/twopoint_data_real.sacc
+  sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/better_binning/summary_statistics_real.sacc
   # this was changed 
   sources:
     {% for i in range(4) %}
@@ -86,15 +86,19 @@ two_point:
     {{ stat }}_src{{ j }}_src{{ i }}:
       sources: ['src{{ j }}', 'src{{ i }}']
       sacc_data_type: '{{ sacc_stat }}'
+      ell_or_theta_min: 20.0
+      ell_or_theta_max: 250.0
     {% endfor %}
     {% endfor %}
     {% endfor %}
 
     {% for i in range(4) %}
-    {% for j in range(i, 4) %}
+    {% for j in range(i, 3) %}
     gammat_lens{{ j }}_src{{ i }}:
       sources: ['src{{ i }}', 'lens{{ j }}']
       sacc_data_type: 'galaxy_shearDensity_xi_t'
+      ell_or_theta_min: 20.0
+      ell_or_theta_max: 250.0
     {% endfor %}
     {% endfor %}
 
@@ -102,6 +106,8 @@ two_point:
     wtheta_lens{{ i }}_lens{{ i }}:
       sources: ['lens{{ i }}', 'lens{{ i }}']
       sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 20.0
+      ell_or_theta_max: 250.0      
     {% endfor %}
 
   likelihood:
@@ -116,7 +122,7 @@ two_point:
     {% endfor %}
 
     {% for i in range(4) %}
-    {% for j in range(i, 4) %}
+    {% for j in range(i, 3) %}
       - gammat_lens{{ j }}_src{{ i }}
     {% endfor %}
     {% endfor %}
