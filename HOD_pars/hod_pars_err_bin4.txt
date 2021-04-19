@@ -1,0 +1,6 @@
+# Best-fit, err [Mmin, sigma_logM, fcen, M1, alpha
+5.96e+12 1.3e+12
+0.648 0.034
+0.456 0.0736
+1.6e+13 2.27e+12
+1.14 0.0594

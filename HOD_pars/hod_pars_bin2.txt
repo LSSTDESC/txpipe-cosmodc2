@@ -1,0 +1,6 @@
+# Log(Mmin), sigma_logM, fcen, Log(M1), alpha
+12.342
+0.528
+0.191
+13.203
+1.213
