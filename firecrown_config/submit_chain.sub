@@ -13,4 +13,4 @@ export OMP_NUM_THREADS=1
 
 conda activate env_firecrown
 
-mpirun -c 48 firecrown run-cosmosis cosmodc2_firecrown_real_3x2pt.yaml
+mpirun -c 48 firecrown run-cosmosis cosmodc2_firecrown_real_3x2pt_6mpc.yaml

@@ -1,0 +1,221 @@
+parameters:
+  Omega_k: 0.0
+  Omega_b: 0.04479
+  Omega_c: 0.22
+  w0: -1.0
+  wa: 0.0
+  h: 0.71
+  sigma8: 0.8
+  n_s: 0.963
+
+  # linear bias for lenses
+  bias_lens0: 1.404
+  bias_lens1: 1.458
+  bias_lens2: 1.693
+  bias_lens3: 1.922
+  bias_lens4: 2.133
+
+# Defines options when running one of the samplers
+# through cosmosis
+cosmosis:
+  sampler: multinest
+  output: chain_cosmodc2_3x2pt_real_multinest.txt
+  debug: True
+  quiet: False
+  mpi: True
+  # parameters for individual samplers:
+  test:
+    fatal_errors: True
+  emcee:
+    walkers: 10
+    nsample: 20
+  grid:
+    nsample_dimension: 5
+  fisher:
+    step_size: 0.02
+  multinest:
+    max_iterations: 50000
+    resume: True
+    live_points: 500
+    efficiency: 0.3
+    tolerance: 0.1
+    constant_efficiency: F
+  parameters:
+    Omega_c: [0.1, 0.22, 0.9]
+    sigma8: [0.4, 0.8, 1.2] 
+    {% for i in range(5) %}
+    bias_lens{{ i }}: [0.8, 1.4, 3.0]
+    {% endfor %}
+    Omega_b: [0.03, 0.048, 0.07]
+    h: [0.55, 0.71, 0.91]
+    n_s: [0.87, 0.963, 1.07]
+
+    # h: [0.55, 0.71, 1.1]
+    #n_s: [0.87, 0.963, 1.1]
+    #Omega_b: [0.01, 0.048, 0.12]
+    #bias_lens0: [0.8, 1.404, 3.0]
+    #bias_lens1: [0.8, 1.458, 3.0]
+    #bias_lens2: [0.8, 1.693, 3.0]
+    #bias_lens3: [0.8, 1.922, 3.0]
+    #bias_lens4: [0.8, 2.133, 3.0]
+
+    #priors:
+    #module: firecrown.priors
+  
+    #Omega_c:
+    #kind: uniform
+    #loc: 0.1
+    #scale: 0.8  
+
+    #sigma8:
+    #kind: uniform
+    #loc: 0.4
+    #scale: 0.8  
+
+two_point:
+  module: firecrown.ccl.two_point
+  #sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/2021/june/7sbins/summary_statistics_real.sacc
+  sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/2021/december_14/7sbins/summary_statistics_real.sacc
+  # this was changed 
+  sources:
+    {% for i in range(7) %}
+    src{{ i }}:
+      kind: WLSource
+      sacc_tracer: source_{{ i }}
+    {% endfor %}
+
+    {% for i in range(5) %}
+    lens{{ i }}:
+      kind: NumberCountsSource
+      sacc_tracer: lens_{{ i }}
+      bias: bias_lens{{ i }}      
+    {% endfor %}
+
+  statistics:
+    {% for stat, sacc_stat in [('xim', 'galaxy_shear_xi_minus'), ('xip', 'galaxy_shear_xi_plus')] %} 
+    {% for i in range(7) %}
+    {% for j in range(i, 7) %}
+    {{ stat }}_src{{ j }}_src{{ i }}:
+      sources: ['src{{ j }}', 'src{{ i }}']
+      sacc_data_type: '{{ sacc_stat }}'
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+
+    {% for i in range(7) %}
+    gammat_lens0_src{{ i }}:
+      sources: ['src{{ i }}', 'lens0']
+      sacc_data_type: 'galaxy_shearDensity_xi_t'
+      ell_or_theta_min: 24.75
+    gammat_lens1_src{{ i }}:
+      sources: ['src{{ i }}', 'lens1']
+      sacc_data_type: 'galaxy_shearDensity_xi_t'
+      ell_or_theta_min: 15.61619428
+    gammat_lens2_src{{ i }}:
+      sources: ['src{{ i }}', 'lens2']
+      sacc_data_type: 'galaxy_shearDensity_xi_t'
+      ell_or_theta_min: 12.40438403
+    gammat_lens3_src{{ i }}:
+      sources: ['src{{ i }}', 'lens3']
+      sacc_data_type: 'galaxy_shearDensity_xi_t'
+      ell_or_theta_min: 12.40438403
+    gammat_lens4_src{{ i }}:
+      sources: ['src{{ i }}', 'lens4']
+      sacc_data_type: 'galaxy_shearDensity_xi_t'
+      ell_or_theta_min: 9.85315247
+    {% endfor %}
+    wtheta_lens0_lens0:
+      sources: ['lens0', 'lens0']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 24.75
+    wtheta_lens1_lens1:
+      sources: ['lens1', 'lens1']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 15.61619428
+    wtheta_lens2_lens2:
+      sources: ['lens2', 'lens2']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 12.40438403
+    wtheta_lens3_lens3:
+      sources: ['lens3', 'lens3']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 12.40438403
+    wtheta_lens4_lens4:
+      sources: ['lens4', 'lens4']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 9.85315247
+
+    wtheta_lens1_lens0:
+      sources: ['lens1', 'lens0']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens2_lens0:
+      sources: ['lens2', 'lens0']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens3_lens0:
+      sources: ['lens3', 'lens0']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens4_lens0:
+      sources: ['lens4', 'lens0']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+
+    wtheta_lens2_lens1:
+      sources: ['lens2', 'lens1']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens3_lens1:
+      sources: ['lens3', 'lens1']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens4_lens1:
+      sources: ['lens4', 'lens1']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens3_lens2:
+      sources: ['lens3', 'lens2']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens4_lens2:
+      sources: ['lens4', 'lens2']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+    wtheta_lens4_lens3:
+      sources: ['lens4', 'lens3']
+      sacc_data_type: 'galaxy_density_xi'
+      ell_or_theta_min: 300.
+
+
+  likelihood:
+    kind: ConstGaussianLogLike
+    data_vector: # concatenate the 2pt functions together
+    {% for i in range(5) %}
+       - wtheta_lens{{ i }}_lens{{ i }}
+     {% endfor %}
+    
+    {% for i in range(7) %}
+    {% for j in range(i, 5) %}
+      - gammat_lens{{ j }}_src{{ i }}
+    {% endfor %}
+    {% endfor %}
+
+    {% for stat in ['xim', 'xip'] %}  
+    {% for i in range(7) %}
+    {% for j in range(i, 7) %}
+      - {{ stat }}_src{{ j }}_src{{ i }}
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+
+
