@@ -1,7 +1,8 @@
 parameters:
   Omega_k: 0.0
   Omega_b: 0.04479
-  Omega_c: 0.22
+  Omega_m: 2.647887e-01
+  #Omega_c: 0.22
   w0: -1.0
   wa: 0.0
   h: 0.71
@@ -35,23 +36,11 @@ cosmosis:
     tolerance: 0.1
     constant_efficiency: F
   parameters:
-    Omega_c: [0.1, 0.22, 0.9]
+    Omega_m: [0.1, 0.22, 0.9]
     sigma8: [0.4, 0.8, 1.2] 
-    {% for i in range(5) %}
-    bias_lens{{ i }}: [0.8, 1.4, 3.0]
-    {% endfor %}
     Omega_b: [0.03, 0.048, 0.07]
     h: [0.55, 0.71, 0.91]
     n_s: [0.87, 0.963, 1.07]
-
-    # h: [0.55, 0.71, 1.1]
-    #n_s: [0.87, 0.963, 1.1]
-    #Omega_b: [0.01, 0.048, 0.12]
-    #bias_lens0: [0.8, 1.404, 3.0]
-    #bias_lens1: [0.8, 1.458, 3.0]
-    #bias_lens2: [0.8, 1.693, 3.0]
-    #bias_lens3: [0.8, 1.922, 3.0]
-    #bias_lens4: [0.8, 2.133, 3.0]
 
     #priors:
     #module: firecrown.priors
@@ -69,7 +58,7 @@ cosmosis:
 two_point:
   module: firecrown.ccl.two_point
   #sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/2021/june/7sbins/summary_statistics_real.sacc
-  sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/2021/december_14/7sbins/summary_statistics_real.sacc
+  sacc_data: ../../TXPipe/data/cosmodc2/outputs_redmagic/2021/december14/7sbins/summary_statistics_real.sacc
   # this was changed 
   sources:
     {% for i in range(7) %}

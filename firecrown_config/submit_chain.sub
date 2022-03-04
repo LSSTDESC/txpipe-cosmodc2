@@ -4,7 +4,7 @@
 #SBATCH --nodes=4
 #SBATCH --constraint=haswell
 #SBATCH --account=m1727
-#SBATCH --job-name=3x2pt
+#SBATCH --job-name=cs
 #SBATCH --output=%x.log
 #SBATCH --mail-type=END
 
@@ -13,4 +13,4 @@ export OMP_NUM_THREADS=1
 
 conda activate env_firecrown
 
-mpirun -c 48 firecrown run-cosmosis cosmodc2_firecrown_real_3x2pt_6mpc.yaml
+mpirun -c 48 firecrown run-cosmosis cosmodc2_firecrown_real_cosmicshear.yaml
