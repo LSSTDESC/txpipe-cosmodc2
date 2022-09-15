@@ -5,6 +5,8 @@ import numpy as np
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
+print('Run with conda activate cartosky')
+
 path_dc2 = '/global/cscratch1/sd/jprat/TXPipe/data/star-challenge/outputs/Sep14/binned_lens_catalog.hdf5'
 path_gs = '/global/cscratch1/sd/jprat/TXPipe/data/gaussian_sims/outputs_gaussian_sims/gaussian_sims_srdnzs_fullsky/071222/12300area/2022/July14/binned_lens_catalog.hdf5'
 
@@ -21,12 +23,12 @@ ra_gs = gs['lens/bin_0/ra'][:]
 dec_gs = gs['lens/bin_0/dec'][:]
 print('Loaded gs')
 r = np.random.uniform(0,1, len(ra_gs))
-mask = r<0.001
+mask = r<0.005
 
 fig = plt.figure(figsize = (10,8))
 smap = cartosky.Skymap(projection='ortho',lon_0=0, lat_0=-25)
-smap.scatter(ra_gs[mask], dec_gs[mask], s=1.5, label= labels[1], color=colors[1])
-smap.scatter(ra_dc2, dec_dc2, s=1.5, label= labels[0], color=colors[0])
+smap.scatter(ra_gs[mask], dec_gs[mask], s=1.5, label= labels[0], color=colors[0])
+smap.scatter(ra_dc2, dec_dc2, s=1.5, label= labels[1], color=colors[1])
 legend_elements = [Line2D([0], [0], marker='o', markerfacecolor=colors[0], color='w',label=labels[0],markersize=8),
                    Line2D([0], [0], marker='o', markerfacecolor=colors[1], color='w',label=labels[1],markersize=8)]#,
                    #Line2D([0], [0], marker='o', markerfacecolor=colors[2], color='w',label=labels[2],markersize=8)]
